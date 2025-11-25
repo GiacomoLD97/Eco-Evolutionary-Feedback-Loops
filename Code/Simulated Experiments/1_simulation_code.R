@@ -1,8 +1,10 @@
-######################################################################################################
+
 ##### This files runs the replicator model simulations at two levels of intraspecific intransitivity
 
-rm(list=ls())
-gc()
+
+### 1. Load required packages ####
+
+# Install packages before loading if needed
 
 library(numDeriv)
 library(R.utils)
@@ -18,12 +20,19 @@ library(reshape2)
 library(gridExtra)
 library(igraph)
 library(tidyverse)
+library(here)
 
-setwd("~/Git/ecoevo_intran/")
+### 2. Set Relative Directories to execute script ####
 
-source("code/functions_replicator.R")
+# Assuming you have downloaded the GitHub Repo and opened the project
+# Using here to source relative directories 
+here()
 
-out_folder <- "data/simulation_results"
+here::i_am("Code/Simulated Experiments/1_simulation_code.R")
+
+source(here("Code", "Simulated Experiments", "0_functions_replicator.R"))
+
+out_folder <- here("Data", "Simulation_results")
 
 # specify the directory to save results to
 dir.create(out_folder, showWarnings = FALSE)
@@ -31,6 +40,7 @@ dir.create(out_folder, showWarnings = FALSE)
 offset <- 1000000
 
 # get the offset in case we've already written some files
+
 have_files <- list.files(out_folder)
 if(length(have_files) > 0){
 	offset <- max(as.numeric(gsub("\\.csv", "", gsub("file_", "", have_files))))+10000000
@@ -38,6 +48,8 @@ if(length(have_files) > 0){
 	offset <- 0
 }
 
+
+### 3. Initialize Simulation run ####
 
 # number of threads
 nthreads <- 12
@@ -79,6 +91,10 @@ neach <- 25
 
 # creat the fit squence
 chunk_seq <- seq(1, nrow(seqmat), by = neach)
+
+
+
+### 4. Run the Simulation ####
 
 # simulate in parallel, with each thread running 100 sims at a time
 res <- foreach(kind = 1:length(chunk_seq), .combine = c, .inorder = FALSE)%dopar%{

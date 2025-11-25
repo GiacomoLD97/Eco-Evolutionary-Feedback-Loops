@@ -1,17 +1,23 @@
-######################################################################################
+
 ##### This files combines all of the individual files output by 1_simulation_code.R
 
-rm(list=ls())
-gc()
+### 1. Load required packages ####
+
+# Install packages before loading if needed
 
 library(tidyverse)
+library(here)
 
-setwd("~/Git/ecoevo_intran/")
+### 2. Set Relative Directories to execute script ####
 
+here()
+
+here::i_am("Code/Simulated Experiments/2_combine_files.R")
 
 # specify the folder to combine
-out_folder <- "data/simulation_results"
+out_folder <- here("Data", "Simulation_results")
 
+### 3. Combine the files ####
 
 # now list all the files and merge
 my_files <- list.files(out_folder)
