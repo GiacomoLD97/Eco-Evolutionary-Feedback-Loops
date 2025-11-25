@@ -1,5 +1,9 @@
+#Define Required functions for simulation and modelling
 
-# given a set of parameters, fit a random model with perfect intransitivity vs. hierarchy
+### 1. Single Simulation ####
+
+#given a set of parameters, fit a random model with perfect intransitivity vs. hierarchy
+
 run_single_sim <- function(j, seqmat, C1, C2, max_count){
 	
 	# set the seed
@@ -120,7 +124,10 @@ run_single_sim <- function(j, seqmat, C1, C2, max_count){
 }
 
 
+### 2. Mutator Equation #####
+
 # the main mutator equation, which collapses to the standard eqn when Q=I
+
 zero_sum_mutator<- function(time, x, params){
 
 	with(as.list(params), {
@@ -135,6 +142,9 @@ zero_sum_mutator<- function(time, x, params){
 	})
 }
 
+
+### 3. Rate of Change ####
+
 # calculate the instantaneous rate of change. used for checking the tolerance solution
 point_dxdt<- function(x,H,Q){
 
@@ -142,6 +152,8 @@ point_dxdt<- function(x,H,Q){
 
 	return(dxdt)
 }
+
+### 4. Jacobian ####
 
 # # calculate the Jacobian
 Jacobian_H<-function(x,Q,H){
@@ -153,6 +165,8 @@ Jacobian_H<-function(x,Q,H){
 		return(as.matrix(1))
 	}
 }
+
+### 5. Integration ####
 
 # integrate the dynamics given a specified function
 integrate_dynamics<- function(x0=NULL,pars,func_use,maxtime=1000,maxsteps=10000,lengthtime=100,thresh=1e-7,method="ode45",rtol=NULL,atol=NULL){
@@ -180,11 +194,16 @@ integrate_dynamics<- function(x0=NULL,pars,func_use,maxtime=1000,maxsteps=10000,
 	return(out)
 }
 
+### 6. Complementary Matrix ####
+
 # create a complementary matrix
 make.comp<-function(X){
 	X[lower.tri(X)]<-1-t(X)[lower.tri(t(X))]
 	return(X)
 }
+
+
+### 7. Sum Matrix ####
 
 # this creates a matrix which sums all of values within species
 make_species_sum_matrix<-function(m){
@@ -205,6 +224,8 @@ make_species_sum_matrix<-function(m){
 	return(B)
 }
 
+### 8. Optimal Solution ####
+
 # solving for optimal solution using linear programming, assuming uncorrelated phenotypes
 
 find_optimal_strategy<- function(H,verbose=TRUE,time_limit=5000){
@@ -218,6 +239,8 @@ find_optimal_strategy<- function(H,verbose=TRUE,time_limit=5000){
     return(z$solution / sum(z$solution))
 }
 
+### 9. Membership from m vector ####
+
 # calculate a membership vector from the m=(m1,m2,...mn) vector
 get_membership<-function(m){
 
@@ -230,6 +253,9 @@ get_membership<-function(m){
 
 	return(membership)
 }
+
+
+### 10. Kendall and Babington Smith's d ####
 
 # calculate the Babington measure of intransitivity
 calc_babington <- function(myH, weighted = FALSE){
@@ -246,6 +272,9 @@ calc_babington <- function(myH, weighted = FALSE){
 	d <- choose(n, 3) - sum(rowSums(myH, na.rm = T) *(rowSums(myH, na.rm = T) - 1)/2)
 	return(round(d/dmax, 3))
 }
+
+
+### 11. Species level H matrix ####
 
 # get the species-level H matrix
 get_Hsum <- function(H, membership){
@@ -264,7 +293,9 @@ get_Hsum <- function(H, membership){
 }
 
 
-# give it a membership vector, a rho between zero and one, and should it have 0.5 between species?
+### 12. Define Matrix ####
+
+# give it a membership vector, a rho between zero and one, and should it have 0.5 between species
 construct_H_matrix<-function(m,rho=0,return_zipped=F,rho_within=NULL){
 
 	n<-length(m)
@@ -335,8 +366,9 @@ construct_H_matrix<-function(m,rho=0,return_zipped=F,rho_within=NULL){
 
 }
 
-
+### 13. Q Matrix ####
 # construct a Q matrix with variable entries if desired
+
 construct_Q_matrix<-function(m,p,range_p=0.1,range_q=0.1,min_above=0.05,max_p=0.95,ignore_min=FALSE){
 
 	membership<-get_membership(m)
