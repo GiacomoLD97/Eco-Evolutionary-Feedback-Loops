@@ -36,6 +36,8 @@ JJ and TC provided feedback on the code
   - Simulation_results
   - Simulation_results.csv (>1GB file, not saved in GitHub)
 - R Project
+- LICENSE
+- README
 
 ### R script descriptions
 
