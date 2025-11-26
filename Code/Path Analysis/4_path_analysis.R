@@ -55,19 +55,32 @@ graph_sem(model = fit)
 #Model fit and variable coefficients
 summary(fit, fit.measures = TRUE, rsquare = TRUE, stand = TRUE)
 
+#labels 
+labels <- c(
+  "Interspecific Intransitivity",
+  "Final Diversity",
+  "Intraspecific Intransitivity",
+  "Initial Diversity",
+  "m", 
+  "p",
+  "rho")
+
 #Refined path diagram
-semPaths( 
-  object = fit, 
-  what = "path", 
+semPaths(
+  fit,
+  what = "path",
   whatLabels = "par",
   style = "ram",
-  layout = "tree", 
-  rotation = 2, 
-  sizeMan = 7, 
-  sizeLat = 7, 
-  color = "lightgray", 
-  edge.label.cex = 1.2, 
-  label.cex = 1.3
-  )
-
-
+  layout = "tree",
+  rotation = 2,
+  sizeMan = 12,
+  sizeLat = 12,
+  color = "lightgray",
+  edge.label.cex = 1.8,
+  label.cex = 2.0,
+  edge.width = 2.5,
+  border.width = 2,
+  exoCov = FALSE,
+  nCharNodes = 0,
+  nodeLabels = labels
+)
